@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fauzan Dita Nurrahman | Portfolio Excel &amp; Analisis Data</title>
+<meta name="description" content="Tiga studi kasus Excel: HR dashboard dengan macro VBA, analisis penjualan Superstore, dan validasi nilai 750 mahasiswa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EDF0F3;
+    --surface: #FFFFFF;
+    --head: #E3E8ED;
+    --line: #D3DAE1;
+    --ink: #1A2B3C;
+    --muted: #556577;
+    --accent: #1D7A4A;
+    --accent-soft: #DCEFE4;
+    --sel: #2563EB;
+    --bad: #B03A2B;
+    --bad-soft: #F8E2DE;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121A22;
+      --surface: #1A242E;
+      --head: #223040;
+      --line: #2E3C4B;
+      --ink: #E5EBF1;
+      --muted: #9CABB9;
+      --accent: #52C285;
+      --accent-soft: #1E3A2D;
+      --sel: #7BA7FF;
+      --bad: #F29A8D;
+      --bad-soft: #3D2622;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121A22;
+    --surface: #1A242E;
+    --head: #223040;
+    --line: #2E3C4B;
+    --ink: #E5EBF1;
+    --muted: #9CABB9;
+    --accent: #52C285;
+    --accent-soft: #1E3A2D;
+    --sel: #7BA7FF;
+    --bad: #F29A8D;
+    --bad-soft: #3D2622;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    margin: 0;
+    padding-bottom: 76px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+
+  .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 56px 0 48px; }
+  .hero-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 920px) { .hero-grid { grid-template-columns: 1fr 1.1fr; } }
+  .brand { margin: 0 0 14px; font-weight: 600; color: var(--accent); font-size: 1rem; }
+  h1 {
+    margin: 0 0 18px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 5.2vw, 3.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  .lede { margin: 0 0 26px; max-width: 46ch; color: var(--muted); font-size: 1.05rem; }
+  .btn {
+    display: inline-block;
+    padding: 11px 18px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  :root[data-theme="dark"] .btn { color: #0E1A13; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { color: #0E1A13; } }
+  .btn:hover { filter: brightness(1.08); }
+
+  /* mini spreadsheet */
+  .sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .fbar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--head); font-family: var(--font-mono); font-size: 0.78rem; min-height: 38px; }
+  .fbar .ref { padding: 2px 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; color: var(--muted); }
+  .fbar .fx { font-style: italic; color: var(--muted); }
+  .fbar code { font: inherit; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .scroller { overflow-x: auto; }
+  table.grid { border-collapse: collapse; width: 100%; min-width: 520px; font-family: var(--font-mono); font-size: 0.8rem; }
+  .grid th, .grid td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; white-space: nowrap; height: 38px; }
+  .grid thead th { background: var(--head); color: var(--muted); font-weight: 500; text-align: center; padding: 4px 10px; height: auto; }
+  .grid tbody th { background: var(--head); color: var(--muted); font-weight: 500; text-align: center; width: 34px; padding: 8px 4px; }
+  .grid tr.hd td { background: var(--surface); font-family: var(--font-body); font-weight: 600; color: var(--ink); }
+  .grid td { transition: background-color .5s ease; }
+  .grid td.num { text-align: right; }
+  .grid td.bad { background: var(--bad-soft); color: var(--bad); }
+  .grid td.flash { background: var(--accent-soft); }
+  .grid td.sel { outline: 2px solid var(--sel); outline-offset: -2px; }
+  .sheet-foot { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 12px; border-top: 1px solid var(--line); }
+  .sheet-foot p { margin: 0; font-size: 0.85rem; color: var(--muted); flex: 1 1 240px; }
+  .toggle {
+    font: inherit; font-weight: 600; font-size: 0.9rem;
+    padding: 8px 14px; border-radius: 4px; cursor: pointer;
+    border: 1px solid var(--accent); background: transparent; color: var(--accent);
+  }
+  .toggle:hover { background: var(--accent-soft); }
+  .note { margin: 12px 2px 0; font-size: 0.8rem; color: var(--muted); }
+
+  /* ---------- Case studies ---------- */
+  .case { padding: 60px 0; border-top: 1px solid var(--line); scroll-margin-top: 8px; }
+  .case-head { margin-bottom: 30px; max-width: 760px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .file { font-family: var(--font-mono); font-size: 0.78rem; padding: 3px 9px; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; color: var(--muted); }
+  .flag { font-size: 0.8rem; font-weight: 600; padding: 3px 9px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); }
+  h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 3.2vw, 2.15rem); line-height: 1.15; letter-spacing: -0.015em; }
+  .case-body { display: grid; gap: 40px; }
+  @media (min-width: 920px) { .case-body { grid-template-columns: 1fr 1fr; gap: 56px; } }
+  h3 { margin: 28px 0 8px; font-size: 1rem; font-weight: 600; }
+  h3:first-child { margin-top: 0; }
+  .story p, .story li { max-width: 62ch; }
+  .story p { margin: 0; }
+  .story ul { margin: 0; padding-left: 1.2em; }
+  .story li { margin-bottom: 6px; }
+
+  table.stat { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); }
+  .stat caption { text-align: left; padding: 0 0 8px; font-weight: 600; font-size: 0.95rem; }
+  .stat th, .stat td { border: 1px solid var(--line); padding: 8px 12px; font-size: 0.92rem; }
+  .stat th { text-align: left; font-weight: 400; color: var(--muted); background: var(--head); }
+  .stat td { text-align: right; font-family: var(--font-mono); font-weight: 500; }
+
+  figure.chart { margin: 28px 0 0; }
+  figure.chart figcaption { font-weight: 600; font-size: 0.95rem; margin-bottom: 12px; }
+  ul.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  ul.bars li { display: grid; grid-template-columns: 112px 1fr 92px; gap: 12px; align-items: center; font-size: 0.9rem; }
+  ul.bars .lbl { overflow-wrap: anywhere; }
+  ul.bars .track { height: 18px; background: var(--accent-soft); border-radius: 2px; overflow: hidden; }
+  ul.bars .fill { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+  ul.bars .val { text-align: right; font-family: var(--font-mono); font-size: 0.82rem; }
+  .chart-note { margin: 10px 0 0; font-size: 0.82rem; color: var(--muted); }
+
+  .tools { margin: 26px 0 0; }
+  .tools p { margin: 0 0 8px; font-weight: 600; font-size: 0.95rem; }
+  .tools ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tools li { padding: 3px 10px; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; font-size: 0.85rem; }
+
+  /* ---------- Skills + contact ---------- */
+  .skills { padding: 60px 0 40px; border-top: 1px solid var(--line); scroll-margin-top: 8px; }
+  .skills h2 { margin-bottom: 24px; }
+  table.map { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); font-size: 0.95rem; }
+  .map th, .map td { border: 1px solid var(--line); padding: 10px 14px; text-align: left; vertical-align: top; }
+  .map thead th { background: var(--head); font-weight: 600; }
+  .map tbody th { font-weight: 600; white-space: nowrap; }
+  .scroll-x { overflow-x: auto; }
+  .contact { margin-top: 44px; max-width: 62ch; }
+  .contact h3 { margin: 0 0 8px; font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; }
+  .contact p { margin: 0 0 16px; color: var(--muted); }
+  #kontak-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  #kontak-links a { padding: 9px 16px; border: 1px solid var(--accent); color: var(--accent); border-radius: 4px; font-weight: 600; text-decoration: none; }
+  #kontak-links a:hover { background: var(--accent-soft); }
+  footer { padding: 8px 0 28px; font-size: 0.82rem; color: var(--muted); }
+
+  /* ---------- Sheet tabs (navigasi) ---------- */
+  .tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: var(--head);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tabs ul { list-style: none; margin: 0 auto; padding: 0 12px; max-width: 1080px; display: flex; gap: 2px; overflow-x: auto; }
+  .tabs a {
+    display: block; white-space: nowrap;
+    padding: 11px 16px 10px;
+    font-size: 0.88rem; text-decoration: none; color: var(--muted);
+    border-top: 3px solid transparent;
+  }
+  .tabs a:hover { color: var(--ink); }
+  .tabs a[aria-current="true"] { background: var(--surface); color: var(--ink); font-weight: 600; border-top-color: var(--accent); }
+
+  @media (max-width: 520px) {
+    ul.bars li { grid-template-columns: 92px 1fr 78px; gap: 8px; }
+    .hero { padding-top: 36px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .grid td { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- ===== Ringkasan ===== -->
+  <section class="hero" id="ringkasan" aria-labelledby="judul">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="brand">Fauzan Dita Nurrahman</p>
+        <h1 id="judul">Saya merapikan data mentah di Excel, lalu mengubahnya menjadi dashboard.</h1>
+        <p class="lede">Alumni bootcamp MySkill. Tiga proyek di bawah ini mencakup pembersihan data, validasi, pivot, macro VBA, dan dashboard.</p>
+        <a class="btn" href="#hr">Lihat proyek unggulan</a>
+      </div>
+
+      <div>
+        <div class="sheet" id="demo">
+          <div class="fbar" aria-hidden="true">
+            <span class="ref">A2</span>
+            <span class="fx">fx</span>
+            <code id="fcode">=INISIAL_KOTA&amp;"-"&amp;INISIAL_NAMA&amp;"-"&amp;NOMOR_MANAGER&amp;"-"&amp;TAHUN</code>
+          </div>
+          <div class="scroller">
+            <table class="grid" aria-label="Contoh data sebelum dan sesudah dirapikan">
+              <thead>
+                <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+              </thead>
+              <tbody>
+                <tr class="hd"><th>1</th><td>Order ID</td><td>Order Date</td><td>Pelanggan</td><td>Kota</td><td class="num">Profit</td></tr>
+                <tr><th>2</th><td class="sel" data-r="0" data-c="0">JKT-BS-1028-2016</td><td data-r="0" data-c="1">26 Mei 2016</td><td data-r="0" data-c="2">Budi Santoso</td><td data-r="0" data-c="3">Jakarta</td><td class="num" data-r="0" data-c="4">823.281</td></tr>
+                <tr><th>3</th><td data-r="1" data-c="0">SBY-SR-1030-2016</td><td data-r="1" data-c="1">26 Mei 2016</td><td data-r="1" data-c="2">Siti Rahma</td><td data-r="1" data-c="3">Surabaya</td><td class="num" data-r="1" data-c="4">757.857</td></tr>
+                <tr><th>4</th><td data-r="2" data-c="0">BDG-AP-1031-2016</td><td data-r="2" data-c="1">27 Mei 2016</td><td data-r="2" data-c="2">Andi Pratama</td><td data-r="2" data-c="3">Bandung</td><td class="num" data-r="2" data-c="4">692.100</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="sheet-foot">
+            <p id="status" aria-live="polite">Sesudah: ID dibuat otomatis, tanggal seragam, dan nilai kosong terisi.</p>
+            <button type="button" class="toggle" id="toggle" aria-pressed="false">Lihat data mentah</button>
+          </div>
+        </div>
+        <p class="note">Ilustrasi pola data yang saya tangani di proyek Superstore. Nama dan angka pada tabel ini hanya contoh.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HR Dashboard ===== -->
+  <section class="case" id="hr" aria-labelledby="hr-judul">
+    <div class="wrap">
+      <header class="case-head">
+        <div class="meta"><span class="file">HR_Dashboard.xlsm</span><span class="flag">Proyek unggulan</span></div>
+        <h2 id="hr-judul">Dashboard HR: komposisi 123 karyawan, KPI, dan bonus dalam satu file</h2>
+      </header>
+      <div class="case-body">
+        <div class="story">
+          <h3>Masalah</h3>
+          <p>Data karyawan masih berisi baris kosong, sementara tim HR perlu tahu komposisi karyawan, siapa yang KPI-nya rendah, siapa yang mendekati usia pensiun, dan berapa bonus yang harus dibayar.</p>
+          <h3>Yang saya kerjakan</h3>
+          <ul>
+            <li>Merekam macro VBA yang menghapus baris kosong, lalu menambahkan message box sebagai penanda proses selesai.</li>
+            <li>Menyusun pivot table untuk jumlah karyawan per tipe, KPI di bawah 70%, usia pensiun, dan kontribusi gaji per jabatan.</li>
+            <li>Menghitung bonus tiap jabatan berdasarkan syarat KPI di sheet Master Bonus.</li>
+            <li>Membuat pivot chart (persentase gender dan jumlah karyawan masuk per tahun) serta dashboard yang menampilkan profil karyawan.</li>
+          </ul>
+          <h3>Temuan</h3>
+          <p>Sebanyak 85 karyawan (69%) berstatus tetap dan 38 kontrak. Ada 32 karyawan (26%) dengan KPI kategori Poor, dan 7 karyawan mencapai usia pensiun 50 tahun pada akhir 2025. Total bonus Rp201 juta, dan Senior Manager menerima separuh lebih (Rp108 juta). CEO, General Manager, dan Junior Manager mendapat Rp0 menurut aturan Master Bonus.</p>
+        </div>
+        <div class="data">
+          <table class="stat">
+            <caption>Angka kunci</caption>
+            <tbody>
+              <tr><th scope="row">Total karyawan</th><td>123</td></tr>
+              <tr><th scope="row">Karyawan tetap / kontrak</th><td>85 / 38</td></tr>
+              <tr><th scope="row">Karyawan tetap di Jakarta</th><td>75</td></tr>
+              <tr><th scope="row">KPI kategori Poor (&lt; 70%)</th><td>32</td></tr>
+              <tr><th scope="row">Pensiun akhir 2025 (usia 50)</th><td>7</td></tr>
+              <tr><th scope="row">Total bonus</th><td>Rp201 juta</td></tr>
+            </tbody>
+          </table>
+          <figure class="chart">
+            <figcaption>Bonus per jabatan</figcaption>
+            <ul class="bars">
+              <li><span class="lbl">Senior Manager</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">Rp108 jt</span></li>
+              <li><span class="lbl">Supervisor</span><span class="track"><span class="fill" style="width:45.4%"></span></span><span class="val">Rp49 jt</span></li>
+              <li><span class="lbl">Senior Staff</span><span class="track"><span class="fill" style="width:37%"></span></span><span class="val">Rp40 jt</span></li>
+              <li><span class="lbl">Staff</span><span class="track"><span class="fill" style="width:3.7%"></span></span><span class="val">Rp4 jt</span></li>
+            </ul>
+            <p class="chart-note">CEO, General Manager, dan Junior Manager Rp0.</p>
+          </figure>
+          <div class="tools">
+            <p>Fitur yang dipakai</p>
+            <ul><li>Pivot table</li><li>Pivot chart</li><li>Macro VBA</li><li>Message box</li><li>Dashboard</li><li>Sheet master</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Superstore ===== -->
+  <section class="case" id="superstore" aria-labelledby="ss-judul">
+    <div class="wrap">
+      <header class="case-head">
+        <div class="meta"><span class="file">Superstore_Sales.xlsx</span></div>
+        <h2 id="ss-judul">Superstore: dari 1.000 baris data mentah ke peta profit per kota</h2>
+      </header>
+      <div class="case-body">
+        <div class="story">
+          <h3>Masalah</h3>
+          <p>Data order 2016 sampai 2020 belum siap dianalisis. Kolom kosong, Order ID belum ada, dan tanggal pengiriman salah.</p>
+          <h3>Yang saya kerjakan</h3>
+          <ul>
+            <li>Mengurutkan data tiga tingkat: Order Date, Account Manager ID, lalu Customer Name dari Z ke A.</li>
+            <li>Membuat Order ID otomatis dengan format inisial kota, inisial pelanggan, nomor manager, dan tahun (contoh: JKT-WR-1028-2016).</li>
+            <li>Memperbaiki tanggal pengiriman dan menambah kolom helper untuk Total, Total Profit, dan Lama Pengiriman.</li>
+            <li>Membuat pivot untuk produk dengan jumlah pesanan terbanyak, misalnya Cando PC940 Copier (474 unit).</li>
+          </ul>
+          <h3>Temuan</h3>
+          <p>Surabaya menyumbang 62% order dan 68% profit, jauh di depan Jakarta dan Bandung. Rata-rata pengiriman hanya 2 hari, tetapi ada order yang memakan 27 hari dan layak diperiksa penyebabnya.</p>
+        </div>
+        <div class="data">
+          <table class="stat">
+            <caption>Angka kunci</caption>
+            <tbody>
+              <tr><th scope="row">Jumlah order</th><td>1.000</td></tr>
+              <tr><th scope="row">Periode</th><td>2016 sampai 2020</td></tr>
+              <tr><th scope="row">Total penjualan</th><td>Rp16,5 miliar</td></tr>
+              <tr><th scope="row">Total profit</th><td>Rp7,17 miliar</td></tr>
+              <tr><th scope="row">Rata-rata lama kirim</th><td>2 hari</td></tr>
+              <tr><th scope="row">Pengiriman terlama</th><td>27 hari</td></tr>
+            </tbody>
+          </table>
+          <figure class="chart">
+            <figcaption>Total profit per kota</figcaption>
+            <ul class="bars">
+              <li><span class="lbl">Surabaya</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">Rp4,90 M</span></li>
+              <li><span class="lbl">Jakarta</span><span class="track"><span class="fill" style="width:35.9%"></span></span><span class="val">Rp1,76 M</span></li>
+              <li><span class="lbl">Bandung</span><span class="track"><span class="fill" style="width:10.5%"></span></span><span class="val">Rp0,52 M</span></li>
+            </ul>
+            <p class="chart-note">M = miliar rupiah.</p>
+          </figure>
+          <div class="tools">
+            <p>Fitur yang dipakai</p>
+            <ul><li>Sort bertingkat</li><li>Rumus gabungan teks</li><li>Kolom helper</li><li>Perbaikan format tanggal</li><li>Pivot table</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Nilai Mahasiswa ===== -->
+  <section class="case" id="mahasiswa" aria-labelledby="mhs-judul">
+    <div class="wrap">
+      <header class="case-head">
+        <div class="meta"><span class="file">Nilai_Mahasiswa.xlsx</span></div>
+        <h2 id="mhs-judul">Nilai 750 mahasiswa: validasi data, nilai akhir berbobot, dan grade</h2>
+      </header>
+      <div class="case-body">
+        <div class="story">
+          <h3>Masalah</h3>
+          <p>Data akademik berisi jurusan yang tidak valid, informasi absen dan nama tersebar di sheet lain, dan nilai akhir belum dihitung.</p>
+          <h3>Yang saya kerjakan</h3>
+          <ul>
+            <li>Membuat daftar jurusan valid di sheet Helper, menandai 25 data tidak valid, lalu memperbaikinya.</li>
+            <li>Membentuk ID Mahasiswa dari kode jurusan dan nomor urut (contoh: J001, K002).</li>
+            <li>Mengisi kolom Absen dan Nama dari sheet lain dengan lookup, memakai IFERROR agar data yang tidak ditemukan terisi "No".</li>
+            <li>Mengurangi nilai tugas 10 poin bagi yang absen, menghitung nilai akhir dengan bobot (tiga kuis masing-masing 15%, UTS dan UAS masing-masing 20%, tugas 15%), lalu memberi grade.</li>
+            <li>Menyajikan hasilnya dalam 3 grafik di sheet Helper.</li>
+          </ul>
+          <h3>Temuan</h3>
+          <p>Grade C paling banyak (332 mahasiswa, 44%), disusul B (285). Hanya 48 mahasiswa meraih grade A. Sebanyak 400 mahasiswa (53%) tercatat absen sehingga nilai tugasnya dipotong sebelum nilai akhir dihitung.</p>
+        </div>
+        <div class="data">
+          <table class="stat">
+            <caption>Angka kunci</caption>
+            <tbody>
+              <tr><th scope="row">Jumlah mahasiswa</th><td>750</td></tr>
+              <tr><th scope="row">Jumlah jurusan</th><td>4</td></tr>
+              <tr><th scope="row">Data jurusan tidak valid</th><td>25</td></tr>
+              <tr><th scope="row">Rata-rata nilai akhir</th><td>69,0</td></tr>
+              <tr><th scope="row">Mahasiswa tercatat absen</th><td>400</td></tr>
+            </tbody>
+          </table>
+          <figure class="chart">
+            <figcaption>Jumlah mahasiswa per grade</figcaption>
+            <ul class="bars">
+              <li><span class="lbl">Grade C</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">332</span></li>
+              <li><span class="lbl">Grade B</span><span class="track"><span class="fill" style="width:85.8%"></span></span><span class="val">285</span></li>
+              <li><span class="lbl">Grade D</span><span class="track"><span class="fill" style="width:25.6%"></span></span><span class="val">85</span></li>
+              <li><span class="lbl">Grade A</span><span class="track"><span class="fill" style="width:14.5%"></span></span><span class="val">48</span></li>
+            </ul>
+          </figure>
+          <div class="tools">
+            <p>Fitur yang dipakai</p>
+            <ul><li>Validasi data</li><li>Lookup</li><li>IFERROR</li><li>IF bertingkat</li><li>Nilai berbobot</li><li>Grafik</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Keahlian ===== -->
+  <section class="skills" id="keahlian" aria-labelledby="skill-judul">
+    <div class="wrap">
+      <h2 id="skill-judul">Tiga tahap latihan, tiga tingkat kemampuan</h2>
+      <div class="scroll-x">
+        <table class="map">
+          <thead><tr><th>Tahap</th><th>Fokus</th><th>Proyek</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Basic</th><td>Merapikan dan menyusun data, rumus gabungan teks, kolom helper, pivot table</td><td>Superstore</td></tr>
+            <tr><th scope="row">Intermediate</th><td>Validasi data, lookup, IFERROR, nilai berbobot, grafik</td><td>Nilai Mahasiswa</td></tr>
+            <tr><th scope="row">Advanced</th><td>Pivot chart, macro VBA, dashboard</td><td>HR Dashboard</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="contact" id="kontak">
+        <h3>Mari berdiskusi</h3>
+        <p>Saya mencari kesempatan sebagai analis data atau business analyst junior.</p>
+        <div id="kontak-links"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Semua proyek berasal dari tugas bootcamp MySkill dan memakai data contoh. &copy; 2026 Fauzan Dita Nurrahman.</div>
+</footer>
+
+<nav class="tabs" aria-label="Bagian halaman">
+  <ul>
+    <li><a href="#ringkasan" aria-current="true">Ringkasan</a></li>
+    <li><a href="#hr">HR Dashboard</a></li>
+    <li><a href="#superstore">Superstore</a></li>
+    <li><a href="#mahasiswa">Nilai Mahasiswa</a></li>
+    <li><a href="#keahlian">Keahlian</a></li>
+  </ul>
+</nav>
+
+<script>
+  // Isi alamat di bawah ini. Tombol hanya muncul untuk kolom yang terisi.
+  var CONTACT = { email: "", linkedin: "", github: "" };
+
+  (function () {
+    /* ----- Tombol kontak ----- */
+    var box = document.getElementById("kontak-links");
+    var items = [
+      ["Email", CONTACT.email ? "mailto:" + CONTACT.email : ""],
+      ["LinkedIn", CONTACT.linkedin],
+      ["GitHub", CONTACT.github]
+    ];
+    items.forEach(function (it) {
+      if (!it[1]) return;
+      var a = document.createElement("a");
+      a.href = it[1]; a.textContent = it[0];
+      if (it[1].indexOf("mailto:") !== 0) { a.target = "_blank"; a.rel = "noopener"; }
+      box.appendChild(a);
+    });
+    if (!box.children.length) box.parentNode.removeChild(box);
+
+    /* ----- Demo sebelum / sesudah ----- */
+    var before = [
+      ["", "42516", "budi  santoso", "jakarta ", "823281"],
+      ["", "26-05-16", "SITI  rahma", "SURABAYA", "757.857"],
+      ["", "42517", "andi pratama", "Bandung", ""]
+    ];
+    var after = [
+      ["JKT-BS-1028-2016", "26 Mei 2016", "Budi Santoso", "Jakarta", "823.281"],
+      ["SBY-SR-1030-2016", "26 Mei 2016", "Siti Rahma", "Surabaya", "757.857"],
+      ["BDG-AP-1031-2016", "27 Mei 2016", "Andi Pratama", "Bandung", "692.100"]
+    ];
+    var formula = '=INISIAL_KOTA&"-"&INISIAL_NAMA&"-"&NOMOR_MANAGER&"-"&TAHUN';
+    var cells = document.querySelectorAll("#demo td[data-r]");
+    var fcode = document.getElementById("fcode");
+    var status = document.getElementById("status");
+    var btn = document.getElementById("toggle");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var state = "after";
+    var timers = [];
+
+    function paint(td, mode, animate) {
+      var r = +td.dataset.r, c = +td.dataset.c;
+      var src = mode === "before" ? before : after;
+      td.textContent = src[r][c];
+      var differs = before[r][c] !== after[r][c];
+      td.classList.toggle("bad", mode === "before" && differs);
+      if (animate && mode === "after" && differs) {
+        td.classList.add("flash");
+        timers.push(setTimeout(function () { td.classList.remove("flash"); }, 700));
+      }
+    }
+
+    function show(mode, animate) {
+      timers.forEach(clearTimeout); timers = [];
+      state = mode;
+      var i = 0;
+      cells.forEach(function (td) {
+        var d = animate && !reduce ? (+td.dataset.r + +td.dataset.c) * 110 : 0;
+        i++;
+        if (d) timers.push(setTimeout(function () { paint(td, mode, animate); }, d));
+        else paint(td, mode, animate);
+      });
+      fcode.textContent = mode === "after" ? formula : "";
+      status.textContent = mode === "after"
+        ? "Sesudah: ID dibuat otomatis, tanggal seragam, dan nilai kosong terisi."
+        : "Sebelum: ID kosong di semua baris, tanggal tidak terbaca, dan satu nilai profit hilang.";
+      btn.textContent = mode === "after" ? "Lihat data mentah" : "Rapikan data";
+      btn.setAttribute("aria-pressed", mode === "before" ? "true" : "false");
+    }
+
+    btn.addEventListener("click", function () { show(state === "after" ? "before" : "after", true); });
+
+    // Satu momen pembuka: mulai dari data mentah, lalu dirapikan.
+    if (!reduce) {
+      show("before", false);
+      timers.push(setTimeout(function () { show("after", true); }, 1300));
+    }
+
+    /* ----- Tab aktif mengikuti scroll ----- */
+    var links = document.querySelectorAll(".tabs a");
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          links.forEach(function (a) { a.removeAttribute("aria-current"); });
+          var a = map[e.target.id];
+          if (a) {
+            a.setAttribute("aria-current", "true");
+            var ul = a.closest("ul");
+            if (ul && ul.scrollWidth > ul.clientWidth) {
+              ul.scrollLeft = a.offsetLeft - (ul.clientWidth - a.offsetWidth) / 2;
+            }
+          }
+        });
+      }, { rootMargin: "-35% 0px -55% 0px" });
+      Object.keys(map).forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) io.observe(el);
+      });
+    }
+  })();
+</script>
+</body>
+</html>
